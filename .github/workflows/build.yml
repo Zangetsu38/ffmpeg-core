@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        build: [linux, windows, macos]
+        build: [linux, windows, macos, android]
         arch: [x64, arm, arm64]
         exclude:
           - build: windows
@@ -21,6 +21,10 @@ jobs:
             arch: arm
           - build: windows
             arch: arm64
+          - build: android
+            arch: x64
+          - build: android
+            arch: arm
         include:
           - build: linux
             os: ubuntu-latest
@@ -49,6 +53,11 @@ jobs:
             triplet: osx-release
             vcpkg-root: /Users/runner/vcpkg
             extra-args: --overlay-triplets=./triplets
+          - build: android
+            os: ubuntu-latest
+            triplet: android-static-release
+            vcpkg-root: /usr/local/share/vcpkg
+            extra-args: ""
 
     steps:
       - run: git config --global core.autocrlf input
@@ -142,6 +151,6 @@ jobs:
           ls -al artifacts/
           wget -c https://github.com/tcnksm/ghr/releases/download/v0.14.0/ghr_v0.14.0_linux_amd64.tar.gz
           tar xfv ghr_v0.14.0_linux_amd64.tar.gz
-          ghr_v0.14.0_linux_amd64/ghr -u Vita3K -r ffmpeg-core -n 'Automatic FFmpeg CI builds (${{ env.COMMIT_SHORT_SHA }})' -b "$(printf "Corresponding commit: ${{ github.sha }}")" ${{ env.COMMIT_SHORT_SHA }} artifacts/
+          ghr_v0.14.0_linux_amd64/ghr -u Zangetsu38 -r ffmpeg-core -n 'Automatic FFmpeg CI builds (${{ env.COMMIT_SHORT_SHA }})' -b "$(printf "Corresponding commit: ${{ github.sha }}")" ${{ env.COMMIT_SHORT_SHA }} artifacts/
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
